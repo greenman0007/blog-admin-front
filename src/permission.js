@@ -17,6 +17,7 @@ router.beforeEach((to, from, next) => {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           next()
         }).catch((err) => {
+          console.log("permission 21", err)
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')
             next({ path: '/' })

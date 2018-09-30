@@ -23,13 +23,8 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-      <el-form-item >
-        <div id="captcha">
-          <p id="wait" style="display: block; margin: 0;">正在加载验证码......</p>
-        </div>
-      </el-form-item>
       <el-form-item>
-        <el-button :loading="loading" :disabled="disabled" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
           登录
         </el-button>
       </el-form-item>
@@ -65,58 +60,18 @@ export default {
       }
     }
     return {
-      captchaObj: {},
       loginForm: {
         username: 'admin',
-        password: 'admin',
-        geetest_challenge: '',
-        geetest_validate: '',
-        geetest_seccode: ''
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
-      disabled: true,
       loading: false,
       pwdType: 'password',
       redirect: undefined
     }
-  },
-  created() {
-    // window.addEventListener('hashchange', this.afterQRScan)
-    var _this = this;
-    $scriptjs('static/js/gt.js', function () {
-      _this.$store.dispatch('StartGeetest').then(res =>{
-        window.initGeetest({
-          gt: res.gt,
-          challenge: res.challenge,
-          new_captcha: res.new_captcha, // 用于宕机时表示是新验证码的宕机
-          offline: !res.success, // 表示用户后台检测极验服务器是否宕机，一般不需要关注
-          product: "float", // 产品形式，包括：float，popup, bind
-          width: "100%"
-          // 更多配置参数请参见：http://www.geetest.com/install/sections/idx-client-sdk.html#config
-        }, function (captchaObj) {
-          console.log(document.getElementById("captcha"));
-          captchaObj.appendTo(document.getElementById("captcha"));
-          // captchaObj.bindForm("#loginForm");
-          captchaObj.onReady(function () {
-            document.getElementById("wait").style.display = "none";
-          });
-          captchaObj.onSuccess(function () {
-            var result = captchaObj.getValidate();
-            _this.disabled = false;
-            _this.loginForm.geetest_challenge = result.geetest_challenge;
-            _this.loginForm.geetest_validate = result.geetest_validate;
-            _this.loginForm.geetest_seccode = result.geetest_seccode;
-
-          });
-          _this.captchaObj = captchaObj;
-        });
-      }).catch(() => {
-        _this.loading = false
-      })
-    })
   },
   watch: {
     $route: {
@@ -139,9 +94,6 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(res => {
-            console.log(res)
-            this.captchaObj.reset()
-            this.disabled = true
             this.loading = false
             if (res.status == 'success') {
               this.$message({

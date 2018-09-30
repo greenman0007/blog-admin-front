@@ -38,27 +38,43 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/example',
+    path: '/article',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    redirect: '/article',
+    name: '文章管理',
+    meta: { title: '文章管理', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'articleList',
+        component: () => import('@/views/article/articleList'),
+        meta: { title: '文章列表', icon: 'table' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'articleEdit',
+        component: () => import('@/views/article/articleEdit'),
+        meta: { title: '新增文章', icon: 'tree' }
+      }
+      ,
+      {
+        path: 'articleEdit/:id',
+        component: () => import('@/views/article/articleEdit'),
+        meta: { title: '编辑文章', icon: 'tree' },
+        hidden: true
       }
     ]
   },
-
+  {
+    path: '/openapi',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: '开放平台',
+        component: () => import('@/views/openapi/index'),
+        meta: { title: '开放平台', icon: 'form' }
+      }
+    ]
+  },
   {
     path: '/form',
     component: Layout,

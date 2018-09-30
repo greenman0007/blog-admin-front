@@ -7,11 +7,11 @@ import qs from 'qs';
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 5000 // 请求超时时间
+  timeout: 60000 // 请求超时时间
 })
 
 service.defaults.headers['content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
-service.defaults.withCredentials=true;//让ajax携带cookie
+// service.defaults.withCredentials=true;//让ajax携带cookie
 
 // request拦截器
 service.interceptors.request.use(
@@ -19,8 +19,7 @@ service.interceptors.request.use(
     if (config.data) {
       config.data = qs.stringify(config.data);
     }
-    console.log(store)
-    console.log(store.getters.token)
+
     if (store.getters.token) {
       config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
