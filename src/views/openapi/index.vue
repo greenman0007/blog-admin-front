@@ -70,6 +70,27 @@
     mounted: function () {
     },
     created: function () {
+      $scriptjs('static/js/plugins/clipboardjs/clipboard.js', function () {
+        var clipboard = new ClipboardJS('#copyBtn');
+        clipboard.on('success', function(e) {
+          console.info('Action:', e.action);
+          console.info('Text:', e.text);
+          console.info('Trigger:', e.trigger);
+          this.$message({
+            showClose: true,
+            message: '复制成功',
+            type: 'success'
+          });
+        });
+        clipboard.on('error', function(e) {
+          this.$message({
+            duration: 0,
+            showClose: true,
+            message: '复制失败，请使用 ctrl + c',
+            type: 'error'
+          });
+        });
+      })
     }
   }
 </script>
